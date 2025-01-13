@@ -1,0 +1,140 @@
+Metadata-Version: 2.1
+Name: diffnovo
+Version: 0.1.1
+Summary: DiffNovo: A Transformer-Diffusion Model for De Novo Peptide Sequencing
+Author-email: Shiva Ebrahimi <shivaebrahimi@my.unt.edu>
+License: Apache 2.0
+Project-URL: Homepage, https://github.com/Biocomputing-Research-Group/DiffNovo
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: lightning<2.1,>=2.0
+Requires-Dist: pytorch-lightning<2.0,>=1.9
+Requires-Dist: pyteomics>=4.6
+Requires-Dist: torch<2.1,>=2.0
+Requires-Dist: numpy<2.0
+Requires-Dist: numba>=0.48.0
+Requires-Dist: lxml>=4.9.1
+Requires-Dist: h5py>=3.12.1
+Requires-Dist: einops>=0.4.1
+Requires-Dist: tqdm>=4.65.0
+Requires-Dist: lark>=1.1.4
+Requires-Dist: selfies>=2.1.1
+Requires-Dist: sortedcontainers>=2.4.0
+Requires-Dist: dill>=0.3.6
+Requires-Dist: rdkit>=2023.03.1
+Requires-Dist: pillow>=9.4.0
+Requires-Dist: spectrum-utils>=0.4.1
+Requires-Dist: tensorboard
+Requires-Dist: psutil>=6.1.0
+Requires-Dist: requests>=2.32.3
+Requires-Dist: pandas>=2.0.2
+
+
+# DiffNovo
+## A Transformer-Diffusion Model for De Novo Peptide Sequencing.
+DiffNovo is an innovative tool for de novo peptide sequencing using advanced machine learning techniques. This guide will help you get started with installation, dataset preparation, and running key functionalities like model training, evaluation, and prediction.
+
+Ebrahimi, Shiva, et al.'DiffNovo: A Transformer-Diffusion Model for De Novo Peptide Sequencing'
+
+---
+
+## Installation
+
+To manage dependencies efficiently, we recommend using [conda](https://docs.conda.io/en/latest/). Start by creating a dedicated conda environment:
+
+```sh
+conda create --name diffnovo_env python=3.10
+```
+
+Activate the environment:
+
+```sh
+conda activate diffnovo_env
+```
+
+Install DiffNovo and its dependencies via pip:
+
+```sh
+pip install diffnovo
+```
+
+To verify a successful installation, check the command-line interface:
+
+```sh
+diffnovo --help
+```
+
+---
+
+## Dataset Preparation
+
+### Download DIA Datasets
+
+Annotated DIA datasets can be downloaded from the [datasets page](https://github.com/Biocomputing-Research-Group/DiffNovo/diffnovo-main/datasets). These datasets are essential for running DiffNovo in various modes.
+
+---
+
+### Download Pretrained Model Weights
+
+DiffNovo requires pretrained model weights for predictions in `denovo` or `eval` modes. Compatible weights (in `.ckpt` format) can be found on the [pretrained models page](https://github.com/Biocomputing-Research-Group/DiffNovo/diffnovo-main/pretrained-models).
+
+Specify the model file during execution using the `--model` parameter.
+
+
+---
+
+## Usage
+
+### Predict Peptide Sequences
+
+DiffNovo predicts peptide sequences from MS/MS spectra stored in MGF files. Predictions are saved as a CSV file:
+
+```sh
+diffnovo --mode=denovo --model=pretrained_checkpoint.ckpt --peak_path=path/to/spectra.mgf
+```
+
+---
+
+### Evaluate *de novo* Sequencing Performance
+
+To assess the performance of *de novo* sequencing against known annotations:
+
+```sh
+diffnovo --mode=eval --model=pretrained_checkpoint.ckpt --peak_path=path/to/test/annotated_spectra.mgf
+```
+
+Annotations in the MGF file must include peptide sequences in the `SEQ` field.
+
+---
+
+### Train a New Model
+
+To train a new DiffNovo model from scratch, provide labeled training and validation datasets in MGF format:
+
+```sh
+diffnovo --mode=train --peak_path=path/to/train/annotated_spectra.mgf --peak_path_val=path/to/validation/annotated_spectra.mgf
+```
+
+MGF files must include peptide sequences in the `SEQ` field.
+
+---
+
+### Fine-Tune an Existing Model
+
+To fine-tune a pretrained DiffNovo model, set the `--train_from_scratch` parameter to `false`:
+
+```sh
+diffnovo --mode=train --model=pretrained_checkpoint.ckpt \
+ --peak_path=path/to/train/annotated_spectra.mgf \
+ --peak_path_val=path/to/validation/annotated_spectra.mgf
+```
+
+---
+
+For further details, refer to our documentation or raise an issue on our [GitHub repository](https://github.com/Biocomputing-Research-Group/DiffNovo/issues). 
+
+

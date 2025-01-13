@@ -1,0 +1,2 @@
+[console_scripts]
+diffnovo = diffnovo.diffnovo:main
